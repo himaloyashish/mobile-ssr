@@ -27,9 +27,30 @@ async function run() {
     try {
         // Connect the client to the server	(optional starting in v4.7)
         await client.connect();
-        // Send a ping to confirm a successful connection
+        // Send a ping to confirm a successful connectionj
 
-        const mobileDbCollection = client.db("MobileDoor").collection("mobile")
+        const mobileDbCollection = client.db("MobileDoor").collection("mobile");
+
+
+        app.get('/toySearchByName/:text', async (req, res) => {
+      
+            const indexKeys = { name: 1, type: 1, price: 1, processor:1, memory:1, os:1,  }
+            const indexOption = { name: 'Toy_NameSubCategory' }
+            const ok = await toyAddCollection.createIndex(indexKeys, indexOption)
+      
+            const searchText = req.params.text
+            const result = await mobileDbCollection.find({
+              $or: [
+                { name: { $regex: searchText, $options: 'i' } },
+                { type: { $regex: searchText, $options: 'i' } },
+                { price: { $regex: searchText, $options: 'i' } },
+                { processor: { $regex: searchText, $options: 'i' } },
+                { memory: { $regex: searchText, $options: 'i' } },
+                { os: { $regex : searchText, $options: 'i' }},
+              ]
+            }).toArray()
+            res.send(result)
+          })
 
         await client.db("admin").command({ ping: 1 });
         console.log("Pinged your deployment. You successfully connected to MongoDB!");

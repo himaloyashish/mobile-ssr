@@ -32,7 +32,7 @@ async function run() {
         const mobileDbCollection = client.db("MobileDoor").collection("mobile");
 
 
-        app.get('/toySearchByName/:text', async (req, res) => {
+        app.get('/mobil/:text', async (req, res) => {
       
             const indexKeys = { name: 1, type: 1, price: 1, processor:1, memory:1, os:1,  }
             const indexOption = { name: 'Toy_NameSubCategory' }
@@ -46,7 +46,7 @@ async function run() {
                 { price: { $regex: searchText, $options: 'i' } },
                 { processor: { $regex: searchText, $options: 'i' } },
                 { memory: { $regex: searchText, $options: 'i' } },
-                { os: { $regex : searchText, $options: 'i' }},
+                { os: { $regex : searchText, $options: 'i' } },
               ]
             }).toArray()
             res.send(result)
